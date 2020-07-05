@@ -1,0 +1,65 @@
+version: '3.0'
+services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    container_name: es01 
+    volumes:
+      - elk_data:/usr/share/elasticsearch/data/
+    environment:
+      - node.name=es01
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+        memlock:
+          soft: -1
+          hard: -1
+    ports: ['9200:9200']
+    networks:
+      - elastic
+
+  ls01:
+    image: docker.elastic.co/logstash/logstash:7.4.0
+    container_name: ls01
+    ports: 
+      - 9600:9600
+    volumes: 
+      - ./vol1/logstash/config:/usr/share/logstash/config/
+    networks:
+      - elastic
+
+  kib01:
+    image: docker.elastic.co/kibana/kibana:7.4.0
+    container_name: kib01
+    ports:
+      - 5601:5601
+    volumes:
+      - kibana_data:/usr/share/kibana/data/
+      ELASTICSEARCH_URL: http://es01:9200
+      ELASTICSEARCH_HOSTS: http://es01:9200
+    depends_on: 
+      - es01
+    networks:
+      - elastic
+
+  fb01:
+    image: docker.elastic.co/beats/filebeat:7.4.0
+    container_name: fb01
+    volumes:
+        - ./vol1/Filebeat/data:/usr/share/filebeat/data/
+        - ./vol1/Filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+        - ./vol1/Filebeat/wait_for_it/wait_for_logstash.sh:/usr/share/filebeat/wait_for_it/wait_for_logstash.sh
+        - ./vol1/origem/Entrada/:/usr/share/log/
+    networks:
+        - elastic
+    depends_on: 
+        - ls01
+    #### Script shell que valida se o Logstash já está respondendo, antes de inciar o serviço do Logstash  ###
+    command: ["./wait_for_it/wait_for_logstash.sh"]
+networks:
+  elastic:
+    driver: bridge
+
+volumes:
+  elk_data: {}
+  kibana_data: {}
