@@ -1,5 +1,5 @@
 # Docker
-O	objetivo desse repository e compartir alguns casos de uso de Docker.
+O objetivo desse repositorio é  compartilhar  alguns casos de uso de Docker.
 
 ## Composes
 
