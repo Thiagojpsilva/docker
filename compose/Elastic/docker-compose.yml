@@ -24,6 +24,7 @@ services:
     ports: 
       - 9600:9600
     volumes: 
+     #Arquivo de configuração do Logstsh que contem o arquivo pipeline e os .conf
       - ./vol1/logstash/config:/usr/share/logstash/config/
     networks:
       - elastic
@@ -46,9 +47,13 @@ services:
     image: docker.elastic.co/beats/filebeat:7.4.0
     container_name: fb01
     volumes:
+        ## Local que é gravado o arquivo que controla os dados que já foram processados.
         - ./vol1/Filebeat/data:/usr/share/filebeat/data/
+        ## Arquivo de configuração com definições da coleta de log.
         - ./vol1/Filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+        ## Local com script Shell que irá validar liberação da porta do Logstash.
         - ./vol1/Filebeat/wait_for_it/wait_for_logstash.sh:/usr/share/filebeat/wait_for_it/wait_for_logstash.sh
+        ## Diretório que possui os log's que Filebeat irá jogar para o logstash.
         - ./vol1/origem/Entrada/:/usr/share/log/
     networks:
         - elastic
