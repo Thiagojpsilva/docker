@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
     container_name: es01 
     volumes:
       - elk_data:/usr/share/elasticsearch/data/
@@ -19,23 +19,26 @@ services:
       - elastic
 
   ls01:
-    image: docker.elastic.co/logstash/logstash:7.4.0
+    image: docker.elastic.co/logstash/logstash:7.8.0
     container_name: ls01
     ports: 
       - 9600:9600
     volumes: 
      #Arquivo de configuração do Logstsh que contem o arquivo pipeline e os .conf
-      - ./vol1/logstash/config:/usr/share/logstash/config/
+      - ./vol1/logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./vol1/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./vol1/logstash/config/logstash-csv.conf:/usr/share/logstash/config/logstash-csv.conf
     networks:
       - elastic
 
   kib01:
-    image: docker.elastic.co/kibana/kibana:7.4.0
+    image: docker.elastic.co/kibana/kibana:7.8.0
     container_name: kib01
     ports:
       - 5601:5601
     volumes:
       - kibana_data:/usr/share/kibana/data/
+    environment:
       ELASTICSEARCH_URL: http://es01:9200
       ELASTICSEARCH_HOSTS: http://es01:9200
     depends_on: 
@@ -44,7 +47,7 @@ services:
       - elastic
 
   fb01:
-    image: docker.elastic.co/beats/filebeat:7.4.0
+    image: docker.elastic.co/beats/filebeat:7.8.0
     container_name: fb01
     volumes:
         ## Local que é gravado o arquivo que controla os dados que já foram processados.

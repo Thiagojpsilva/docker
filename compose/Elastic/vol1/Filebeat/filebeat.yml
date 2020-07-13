@@ -19,10 +19,10 @@ filebeat.inputs:
 # Below are the input specific configurations.
 
 - paths:
-    - /usr/share/log/WfProcMgr*.log
+    - /usr/share/log/dados*.csv
   fields_under_root: true
   fields:
-    type: cdi_ws_outbound
+    type: personal_data
     
   # Exclude lines. A list of regular expressions to match. It drops the lines that are
   # matching any regular expression from the list.
@@ -48,17 +48,17 @@ filebeat.inputs:
   # for Java Stack Traces or C-Line Continuation
 
   # The regexp Pattern that has to be matched. The example pattern matches all lines starting with [
-  multiline.pattern: '^EAITransport(.*?)O conversor de transporte EAI foi inicializado(.*?)$'
+  #multiline.pattern: '^(.*?)$'
 
   # Defines if the pattern set under pattern should be negated or not. Default is false.
-  multiline.negate: true
+  #multiline.negate: true
 
   # Match can be set to "after" or "before". It is used to define if lines should be append to a pattern
   # that was (not) matched before or after or as long as a pattern is not matched based on negate.
   # Note: After is the equivalent to previous and before is the equivalent to to next in Logstash
-  multiline.match: after
-  multiline.flush_pattern: '^(.*?)EAITransportPerf(.*?)Sent Request(.*?)$'
-  multiline.timeout: 5m
+  # multiline.match: after
+  #multiline.flush_pattern: '^$'
+  #multiline.timeout: 5m
 
 #============================= Filebeat modules ===============================
 
