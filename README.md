@@ -1,5 +1,5 @@
 # Docker
-O objetivo desse repositorio é  compartilhar  alguns casos de uso de Docker.
+O objetivo desse repositorio é compartilhar  alguns casos de uso de Docker.
 
 ## Composes
 
@@ -7,4 +7,5 @@ O objetivo desse repositorio é  compartilhar  alguns casos de uso de Docker.
 <li>Composes</li>
 <ol>
 <li>Elasticksearch, Kibana, Logstash, Filebeat </li>
+  
 
